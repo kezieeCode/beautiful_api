@@ -66,4 +66,25 @@ class ReceptionistPost{
         }
         
     }
+    public function read_patients_list(){
+        // create a query from the database
+        $sql = 'SELECT 
+           r.id,
+           r.full_name,
+           r.age,
+           r.address,
+           r.phone_number,
+           r.occupation,
+           r.marital_status,
+           r.next_kin,
+           r.next_kin_number,
+           r.created_at
+        FROM
+           beautiful_gate.receptionist r
+         ORDER BY
+           r.created_at DESC';
+           $stmt = $this->conn->prepare($sql);
+           $stmt->execute();
+           return $stmt;
+    }
 }

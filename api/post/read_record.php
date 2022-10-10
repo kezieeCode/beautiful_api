@@ -2,8 +2,8 @@
 header('Access-Control-Allow-Origin: *');
 header('Content-type: application/json');
 
-include('../../models/read_receptionist.php');
-include('../../config/db_con.php');
+include_once '../../models/post_receptionist.php';
+include_once '../../config/db_con.php';
 
 //instantiate connection
 $conn_db = new Connection();
@@ -11,20 +11,20 @@ $database = $conn_db->connect();
 
 //instantiate post
 
-$read_record = new ReceptionistList($database);
+$read_record = new ReceptionistPost($database);
 
 $result = $read_record->read_patients_list();
 
 $num = $result->rowCount();
 //checking the database for the patients record
 if($num > 0){
-    $get_array = array();
-    $get_array['data'] = array();
+    $rec_array = array();
+    $rec_array['info'] = array();
    while($row = $result->fetch(PDO::FETCH_ASSOC)){
     extract($row);
  
 
-    $get_item = array(
+    $rec_item = array(
         'id' => $id,
         'full_name' => $full_name,
         'age' => $age,
@@ -37,9 +37,11 @@ if($num > 0){
         'created_at' => $created_at
 
     );
-    array_push($get_array['data'],$get_item);
-    echo json_encode($get_item);
+
+    array_push($rec_array['info'], $rec_item);
+  
    }
+   echo json_encode($rec_array);
 }else{
-    echo json_encode(array('there was no data'));
+    echo json_encode(array('message'=>'there was no data'));
 }
